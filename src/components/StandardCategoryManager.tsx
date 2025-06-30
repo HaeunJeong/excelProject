@@ -17,6 +17,7 @@ import {
   Alert,
   CircularProgress,
   Button,
+  Divider,
 } from '@mui/material';
 import { IStandardCategory, IStandardCategoryUpdateData } from '../types/account';
 import { standardCategoryApi } from '../services/api';
@@ -161,59 +162,153 @@ const StandardCategoryManager: React.FC = () => {
 
       {/* 수정 다이얼로그 */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          의류 카테고리 수정
+        <DialogTitle sx={{ 
+          backgroundColor: '#f8f9fa', 
+          borderBottom: '1px solid #e9ecef',
+          fontWeight: 'bold',
+          fontSize: '1.2rem'
+        }}>
+          카테고리 정보 수정
         </DialogTitle>
-        <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              fullWidth
-              label="카테고리 번호"
-              value={selectedCategory?.category_code || ''}
-              disabled
-              helperText="카테고리 번호는 수정할 수 없습니다"
-            />
-            <TextField
-              fullWidth
-              label="카테고리 영문명"
-              value={selectedCategory?.category_name_en || ''}
-              disabled
-              helperText="카테고리 영문명은 수정할 수 없습니다"
-            />
-            <TextField
-              fullWidth
-              label="카테고리 한글명"
-              value={formData.category_name_ko}
-              onChange={(e) => setFormData({ ...formData, category_name_ko: e.target.value })}
-              placeholder="한글명을 입력하세요"
-            />
-            <TextField
-              fullWidth
-              label="설명"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              multiline
-              rows={3}
-              placeholder="카테고리에 대한 설명을 입력하세요"
-            />
-            <TextField
-              fullWidth
-              label="포함 단어"
-              value={formData.keywords}
-              onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-              multiline
-              rows={3}
-              placeholder="관련 키워드를 쉼표로 구분하여 입력하세요"
-              helperText="예: shirt, blouse, top, 셔츠, 블라우스"
-            />
+        <DialogContent sx={{ p: 3 }}>
+          <Box sx={{ mt: 1 }}>
+            {/* 카테고리 번호 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ width: '25%', pr: 2 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                  카테고리 번호
+                </Typography>
+              </Box>
+              <Box sx={{ width: '75%' }}>
+                <TextField
+                  fullWidth
+                  value={selectedCategory?.category_code || ''}
+                  disabled
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    '& .MuiInputBase-input.Mui-disabled': {
+                      WebkitTextFillColor: '#6c757d',
+                      backgroundColor: '#f8f9fa'
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
+
+            {/* 카테고리 영문명 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ width: '25%', pr: 2 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                  카테고리 영문명
+                </Typography>
+              </Box>
+              <Box sx={{ width: '75%' }}>
+                <TextField
+                  fullWidth
+                  value={selectedCategory?.category_name_en || ''}
+                  disabled
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    '& .MuiInputBase-input.Mui-disabled': {
+                      WebkitTextFillColor: '#6c757d',
+                      backgroundColor: '#f8f9fa'
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
+
+            {/* 카테고리 한글명 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ width: '25%', pr: 2 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                  카테고리 한글명
+                </Typography>
+              </Box>
+              <Box sx={{ width: '75%' }}>
+                <TextField
+                  fullWidth
+                  value={formData.category_name_ko}
+                  onChange={(e) => setFormData({ ...formData, category_name_ko: e.target.value })}
+                  placeholder="한글명을 입력하세요"
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </Box>
+
+            {/* 카테고리 설명 */}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+              <Box sx={{ width: '25%', pr: 2, pt: 1 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                  카테고리 설명
+                </Typography>
+              </Box>
+              <Box sx={{ width: '75%' }}>
+                <TextField
+                  fullWidth
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="카테고리에 대한 설명을 입력하세요"
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </Box>
+
+            {/* 포함 단어 */}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+              <Box sx={{ width: '25%', pr: 2, pt: 1 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                  포함 단어
+                </Typography>
+              </Box>
+              <Box sx={{ width: '75%' }}>
+                <TextField
+                  fullWidth
+                  value={formData.keywords}
+                  onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                  placeholder="관련 키워드를 입력하세요"
+                  multiline
+                  rows={6}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+            </Box>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+        <DialogActions sx={{ p: 3, backgroundColor: '#f8f9fa', borderTop: '1px solid #e9ecef' }}>
+          <Button 
+            onClick={handleCloseDialog}
+            variant="outlined"
+            sx={{ 
+              minWidth: 80,
+              color: '#6c757d',
+              borderColor: '#6c757d',
+              '&:hover': {
+                borderColor: '#5a6268',
+                backgroundColor: 'rgba(108, 117, 125, 0.04)'
+              }
+            }}
+          >
+            취소
+          </Button>
           <Button 
             onClick={handleSubmit} 
             variant="contained"
             disabled={loading}
+            sx={{ 
+              minWidth: 80,
+              backgroundColor: '#007bff',
+              '&:hover': {
+                backgroundColor: '#0056b3'
+              }
+            }}
           >
             저장
           </Button>
