@@ -22,7 +22,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // 로컬 스토리지에서 인증 정보 복원
         const savedAuth = localStorage.getItem('auth');
         if (savedAuth) {
-            return JSON.parse(savedAuth);
+            const parsed = JSON.parse(savedAuth);
+            console.log('로컬 스토리지에서 복원된 인증 정보:', parsed);
+            return parsed;
         }
         return {
             isAuthenticated: false,
@@ -35,6 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // 인증 상태가 변경될 때마다 로컬 스토리지에 저장
     useEffect(() => {
+        console.log('인증 상태 변경:', authState);
         if (authState.isAuthenticated) {
             localStorage.setItem('auth', JSON.stringify(authState));
         } else {
@@ -44,7 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (code: string): Promise<boolean> => {
         try {
+            console.log('로그인 시도:', code);
             const response = await accessCodeApi.validate(code);
+            console.log('API 응답:', response);
             
             if (response.success && response.data) {
                 const authData = {
@@ -54,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     role: response.data.role,
                     error: null
                 };
+                console.log('설정할 인증 데이터:', authData);
                 setAuthState(authData);
                 localStorage.setItem('auth', JSON.stringify(authData));
                 return true;
@@ -68,6 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setAuthState(errorData);
             return false;
         } catch (error: any) {
+            console.error('로그인 오류:', error);
             // 서버에서 에러를 반환한 경우 (401, 500 등)
             const errorMessage = error.response?.data?.detail?.message || '서버 오류가 발생했습니다';
             const errorData = {

@@ -64,12 +64,6 @@ const Dashboard: React.FC = () => {
       icon: <DictionaryIcon fontSize="large" />,
       path: '/dictionary',
     },
-    {
-      title: '업로드 양식 관리',
-      description: '엑셀 파일 업로드를 위한 양식을 관리합니다. 양식을 다운로드하고 수정할 수 있습니다.',
-      icon: <TemplateIcon fontSize="large" />,
-      path: '/templates',
-    },
     ...(role === 'admin' ? [
       {
         title: '계정 코드 관리',

@@ -41,12 +41,6 @@ const Home: React.FC = () => {
       description: '분류된 HS코드를 포함한 결과를 엑셀 파일로 다운로드할 수 있습니다.',
       icon: <DownloadIcon sx={{ fontSize: 40, color: theme.palette.success.main }} />,
       action: () => navigate('/mapping'),
-    },
-    {
-      title: '업로드 양식 관리',
-      description: '엑셀 파일 업로드를 위한 양식을 관리합니다. 양식을 다운로드하고 수정할 수 있습니다.',
-      icon: <TemplateIcon fontSize="large" />,
-      path: '/templates',
     }
   ];
 

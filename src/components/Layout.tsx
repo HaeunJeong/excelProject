@@ -72,14 +72,18 @@ const Layout: React.FC<LayoutProps> = () => {
   const { isAuthenticated, role, logout } = useAuth();
   const [open, setOpen] = useState(true);
 
+  console.log('Layout - 현재 인증 상태:', { isAuthenticated, role });
+
   const menuItems = [
     { text: '홈', path: '/', icon: <HomeIcon /> },
     { text: 'HS코드 매핑', path: '/mapping', icon: <TableChartIcon /> },
+    { text: '의류 카테고리 사전', path: '/categories', icon: <TableChartIcon /> },
     ...(role === 'admin' ? [
-      { text: '계정 관리', path: '/accounts', icon: <ManageAccountsIcon /> },
-      { text: '업로드 양식 관리', path: '/templates', icon: <TemplateIcon /> }
+      { text: '계정 관리', path: '/accounts', icon: <ManageAccountsIcon /> }
     ] : [])
   ];
+
+  console.log('Layout - 메뉴 아이템:', menuItems);
 
   const handleDrawerOpen = () => {
     setOpen(true);

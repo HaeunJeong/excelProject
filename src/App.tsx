@@ -5,7 +5,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import MappingRuleManager from './components/MappingRuleManager';
 import AccountManager from './components/AccountManager';
-import TemplateManager from './components/TemplateManager';
+import StandardCategoryManager from './components/StandardCategoryManager';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/Login';
@@ -90,19 +90,12 @@ const App: React.FC = () => {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/mapping" element={<MappingRuleManager />} />
+              <Route path="/categories" element={<StandardCategoryManager />} />
               <Route 
                 path="/accounts" 
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AccountManager />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/templates" 
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TemplateManager />
                   </ProtectedRoute>
                 } 
               />

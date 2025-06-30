@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, Paper, Alert } from '@mui/material';
-import { Upload as UploadIcon, Download as DownloadIcon } from '@mui/icons-material';
+import { Upload as UploadIcon, Download as DownloadIcon, AutoFixHigh as MapIcon } from '@mui/icons-material';
 import MappingRuleTable from './MappingRuleTable';
 import { MappingRule } from '../types/mapping';
+import { accessCodeApi } from '../services/api';
 import * as XLSX from 'xlsx';
 
 const MappingRuleManager: React.FC = () => {
     const [mappingRules, setMappingRules] = useState<MappingRule[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isMapping, setIsMapping] = useState(false);
 
     const handleTemplateDownload = () => {
         // 빈 데이터로 워크북 생성
@@ -85,6 +87,41 @@ const MappingRuleManager: React.FC = () => {
         reader.readAsArrayBuffer(file);
     };
 
+    const handleMapToHsCode = async () => {
+        if (mappingRules.length === 0) {
+            setError('매핑할 데이터가 없습니다.');
+            return;
+        }
+
+        setIsMapping(true);
+        try {
+            // 빈 행 제거 (모든 필드가 비어있는 행)
+            const validRules = mappingRules.filter(rule => 
+                rule.styleNo || rule.name || rule.fabricType || 
+                rule.category || rule.gender || rule.materialDetail
+            );
+
+            if (validRules.length === 0) {
+                setError('유효한 데이터가 없습니다.');
+                return;
+            }
+
+            const response = await accessCodeApi.post('/api/v1/mapping/map-to-hs-code', validRules);
+            
+            if (response.success && response.data) {
+                setMappingRules(response.data);
+                setError(null);
+            } else {
+                setError('HS코드 매핑에 실패했습니다.');
+            }
+        } catch (error: any) {
+            console.error('HS코드 매핑 중 오류 발생:', error);
+            setError(error.response?.data?.detail || 'HS코드 매핑 중 오류가 발생했습니다.');
+        } finally {
+            setIsMapping(false);
+        }
+    };
+
     const handleExport = () => {
         // 워크북 생성
         const wb = XLSX.utils.book_new();
@@ -131,6 +168,15 @@ const MappingRuleManager: React.FC = () => {
                             accept=".xlsx,.xls"
                             onChange={handleFileUpload}
                         />
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<MapIcon />}
+                        onClick={handleMapToHsCode}
+                        disabled={mappingRules.length === 0 || isMapping}
+                    >
+                        {isMapping ? 'HS코드 매핑 중...' : 'HS코드 매핑'}
                     </Button>
                     <Button
                         variant="contained"
